@@ -1,4 +1,10 @@
+using Microsoft.EntityFrameworkCore;
+using Notificaciones.Api.Data;
+
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddDbContext<NotificacionesDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("NotificacionesDb")));
 
 // Add services to the container.
 
