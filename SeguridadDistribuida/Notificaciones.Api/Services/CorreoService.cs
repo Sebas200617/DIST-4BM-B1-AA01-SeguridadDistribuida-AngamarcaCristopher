@@ -60,7 +60,7 @@ namespace Notificaciones.Api.Services
 
             // El cuerpo del correo NO se guarda en la base de datos
             _db.EnviosCorreo.Add(registro);
-            await _db.SaveChangesAsync(ct);
+            await _db.SaveChangesAsync(CancellationToken.None);
 
             return registro.Estado == "Enviado";
         }
