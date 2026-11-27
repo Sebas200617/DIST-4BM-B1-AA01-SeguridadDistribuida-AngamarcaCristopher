@@ -1,0 +1,35 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <title>Ingresar con Google</title>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+<body style="font-family:sans-serif;max-width:480px;margin:40px auto">
+    <h2>Ingresar con Google</h2>
+
+    <div id="g_id_onload"
+         data-client_id="930570531825-ccalsna6veb1uklvrd1digl96auqdjur.apps.googleusercontent.com"
+         data-callback="alRecibirCredencial"
+         data-auto_prompt="false"></div>
+    <div class="g_id_signin" data-type="standard" data-text="signin_with"></div>
+
+    <pre id="salida" style="white-space:pre-wrap;word-break:break-all"></pre>
+
+    <script>
+          // @ts-nocheck
+          async function alRecibirCredencial(respuesta) {
+            const r = await fetch('/api/auth/google', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ idToken: respuesta.credential })
+            });
+            const datos = await r.json().catch(() => ({}));
+            const salida = document.getElementById('salida');
+            if (salida) {
+              salida.textContent = 'HTTP ' + r.status + '\n' + JSON.stringify(datos, null, 2);
+            }
+          }
+    </script>
+</body>
+</html>

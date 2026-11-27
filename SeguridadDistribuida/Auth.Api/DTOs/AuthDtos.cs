@@ -73,4 +73,10 @@ namespace Auth.Api.DTOs
         [Required]
         public string Estado { get; set; } = string.Empty; // Activa o Deshabilitada
     }
+
+    public class GoogleLoginRequest
+    {
+        [Required]
+        public string IdToken { get; set; } = string.Empty;
+    }
 }

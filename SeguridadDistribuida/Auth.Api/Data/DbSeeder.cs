@@ -1,4 +1,5 @@
 ﻿using Auth.Api.Model;
+using Auth.Api.Services;
 using Microsoft.AspNetCore.Identity;
 
 namespace Auth.Api.Data
@@ -9,6 +10,7 @@ namespace Auth.Api.Data
         {
             var roles = sp.GetRequiredService<RoleManager<IdentityRole>>();
             var users = sp.GetRequiredService<UserManager<ApplicationUser>>();
+            var usuarios = sp.GetRequiredService<UsuariosClient>();
             var config = sp.GetRequiredService<IConfiguration>();
             var logger = sp.GetRequiredService<ILogger<AuthDbContext>>();
 
@@ -25,22 +27,32 @@ namespace Auth.Api.Data
                 return;
             }
 
-            if (await users.FindByEmailAsync(email) is not null) return;
+            var admin = await users.FindByEmailAsync(email);
 
-            var admin = new ApplicationUser
+            if (admin is null)
             {
-                UserName = email,
-                Email = email,
-                EmailConfirmed = true,
-                Estado = "Activa"
-            };
+                admin = new ApplicationUser
+                {
+                    UserName = email,
+                    Email = email,
+                    EmailConfirmed = true,
+                    Estado = "Activa"
+                };
 
-            var resultado = await users.CreateAsync(admin, password);
-            if (resultado.Succeeded)
+                var resultado = await users.CreateAsync(admin, password);
+                if (!resultado.Succeeded)
+                {
+                    logger.LogError("No se pudo crear el administrador inicial: {Errores}",
+                        string.Join("; ", resultado.Errors.Select(e => e.Code)));
+                    return;
+                }
                 await users.AddToRoleAsync(admin, "Administrador");
-            else
-                logger.LogError("No se pudo crear el administrador inicial: {Errores}",
-                    string.Join("; ", resultado.Errors.Select(e => e.Code)));
+            }
+
+            // Crear el perfil si falta (si ya existe, Usuarios.Api responde 409 y no pasa nada)
+            var ok = await usuarios.CrearPerfilAsync(admin.Id, "Administrador", null, email);
+            if (!ok)
+                logger.LogWarning("No se pudo crear/confirmar el perfil del administrador (¿Usuarios.Api está levantada?).");
         }
     }
 }
