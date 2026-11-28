@@ -1,0 +1,296 @@
+{
+  "info": {
+    "_postman_id": "54f8f4a1-87b1-41fb-8576-280dcd0ae201",
+    "name": "Distributivas",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "token", "value": "" },
+    { "key": "serviceKey", "value": "" },
+    { "key": "adminPassword", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Notificaciones sin clave de servicio",
+      "request": {
+        "auth": { "type": "noauth" },
+        "method": "POST",
+        "header": [
+          { "key": "X-Service-Key", "value": "{{serviceKey}}", "type": "text" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"destinatario\": \"sebas1707aguirre@gmail.com\",\r\n  \"asunto\": \"Prueba\",\r\n  \"cuerpoHtml\": \"<p>Hola desde Notificaciones.Api</p>\",\r\n  \"tipo\": \"Bienvenida\"\r\n}",
+          "options": { "raw": { "language": "json" } }
+        },
+        "url": {
+          "raw": "http://localhost:5054/api/correos/enviar",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "5054",
+          "path": ["api", "correos", "enviar"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Perfil propio sin token",
+      "request": {
+        "auth": { "type": "noauth" },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:5281/api/perfiles/me",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "5281",
+          "path": ["api", "perfiles", "me"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Interno Usuarios crear perfil con clave de servicio",
+      "request": {
+        "auth": { "type": "noauth" },
+        "method": "POST",
+        "header": [
+          { "key": "X-Service-Key", "value": "{{serviceKey}}", "type": "text" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"usuarioId\": \"prueba-123\",\r\n  \"nombre\": \"Juan\",\r\n  \"apellido\": \"Perez\",\r\n  \"correo\": \"juan@prueba.com\"\r\n}",
+          "options": { "raw": { "language": "json" } }
+        },
+        "url": {
+          "raw": "http://localhost:5281/api/perfiles",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "5281",
+          "path": ["api", "perfiles"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Registro cliente valido",
+      "request": {
+        "auth": { "type": "noauth" },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"nombre\": \"Juan\",\r\n  \"apellido\": \"Perez\",\r\n  \"correo\": \"sebas.aguirre.cris@gmail.com\",\r\n  \"password\": \"Cliente#2026\",\r\n  \"confirmarPassword\": \"Cliente#2026\"\r\n}",
+          "options": { "raw": { "language": "json" } }
+        },
+        "url": {
+          "raw": "http://localhost:5089/api/auth/register",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "5089",
+          "path": ["api", "auth", "register"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Recuperacion de contrasena por correo real",
+      "request": {
+        "auth": { "type": "noauth" },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{ \"correo\": \"sebas.aguirre.cris@gmail.com\" }",
+          "options": { "raw": { "language": "json" } }
+        },
+        "url": {
+          "raw": "http://localhost:5089/api/auth/forgot-password",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "5089",
+          "path": ["api", "auth", "forgot-password"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Login correcto",
+      "request": {
+        "auth": { "type": "noauth" },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{ \"correo\": \"sebas.aguirre.cris@gmail.com\", \"password\": \"Nueva#2026\" }",
+          "options": { "raw": { "language": "json" } }
+        },
+        "url": {
+          "raw": "http://localhost:5089/api/auth/login",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "5089",
+          "path": ["api", "auth", "login"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Cambiar contrasena con actual incorrecta",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            { "key": "token", "value": "{{token}}", "type": "string" }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"passwordActual\": \"ClaveEquivocada#1\",\r\n  \"nuevaPassword\": \"Otra#Clave2026\",\r\n  \"confirmarPassword\": \"Otra#Clave2026\"\r\n}",
+          "options": { "raw": { "language": "json" } }
+        },
+        "url": {
+          "raw": "http://localhost:5089/api/auth/change-password",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "5089",
+          "path": ["api", "auth", "change-password"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Login administrador",
+      "request": {
+        "auth": { "type": "noauth" },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{ \"correo\": \"angamarcacristopher83@gmail.com\", \"password\": \"{{adminPassword}}\" }",
+          "options": { "raw": { "language": "json" } }
+        },
+        "url": {
+          "raw": "http://localhost:5089/api/auth/login",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "5089",
+          "path": ["api", "auth", "login"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Admin lista usuarios",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            { "key": "token", "value": "{{token}}", "type": "string" }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:5089/api/admin/usuarios",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "5089",
+          "path": ["api", "admin", "usuarios"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Cliente consulta perfil ajeno",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            { "key": "token", "value": "{{token}}", "type": "string" }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:5281/api/perfiles/1",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "5281",
+          "path": ["api", "perfiles", "1"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Admin deshabilita cuenta",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            { "key": "token", "value": "{{token}}", "type": "string" }
+          ]
+        },
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{ \"estado\": \"Activa\" }",
+          "options": { "raw": { "language": "json" } }
+        },
+        "url": {
+          "raw": "http://localhost:5089/api/admin/usuarios/2f03195c-cdad-498a-9ba1-a6dfb7759604/estado",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "5089",
+          "path": ["api", "admin", "usuarios", "2f03195c-cdad-498a-9ba1-a6dfb7759604", "estado"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Cliente en ruta de admin",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            { "key": "token", "value": "{{token}}", "type": "string" }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:5089/api/admin/usuarios",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "5089",
+          "path": ["api", "admin", "usuarios"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Token de Google invalido",
+      "request": {
+        "auth": { "type": "noauth" },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{ \"idToken\": \"esto.no.es.un.token\" }",
+          "options": { "raw": { "language": "json" } }
+        },
+        "url": {
+          "raw": "https://localhost:7212/api/auth/google",
+          "protocol": "https",
+          "host": ["localhost"],
+          "port": "7212",
+          "path": ["api", "auth", "google"]
+        }
+      },
+      "response": []
+    }
+  ]
+}
